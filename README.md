@@ -21,6 +21,7 @@ Then run `exec zsh` to activate.
 | [zoxide](https://github.com/ajeetdsouza/zoxide)                         | Smarter `cd` via `z`                       |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Ghost-text suggestions from history        |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Commands colored as you type        |
+| [Miniconda](https://docs.anaconda.com/miniconda/)                               | Python package manager               |
 
 ## Features
 
@@ -32,7 +33,7 @@ Then run `exec zsh` to activate.
 - **Up/Down arrows** search history by the prefix you've already typed
 - **`Ctrl+R`** fuzzy history search via fzf
 - **`z <dir>`** jump to frecent directories via zoxide
-- **Conda** — initializes miniconda if present, with base env auto-activation disabled
+- **Miniconda** — installed if not present, base env auto-activation disabled
 - **FRIDAY mode** — every Friday the theme switches to purple (`#c084fc`)
 
 ## Commands
