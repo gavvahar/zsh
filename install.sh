@@ -112,6 +112,12 @@ else
     fi
 fi
 
+# ── conda ─────────────────────────────────────────────────────────────────────
+if command -v conda &>/dev/null; then
+    conda config --set auto_activate_base false
+    log "Disabled conda auto-activate base"
+fi
+
 printf "\n${CYAN}  ╔══[ J.A.R.V.I.S. INSTALLATION COMPLETE ]══╗${RESET}\n"
 printf "${CYAN}  ║  Run: exec zsh                            ║${RESET}\n"
 printf "${CYAN}  ╚════════════════════════════════════════════╝${RESET}\n\n"
