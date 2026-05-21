@@ -87,11 +87,13 @@ curl -fsSL "$RAW/starship.toml"        -o ~/zsh/starship.toml
 curl -fsSL "$RAW/starship-friday.toml" -o ~/zsh/starship-friday.toml
 
 # ── ~/.zshrc ──────────────────────────────────────────────────────────────────
-if grep -q "source ~/zsh/.zshrc" ~/.zshrc 2>/dev/null; then
-    log "~/.zshrc already sources JARVIS config — skipping"
+ZSHRC_LINE='source ~/zsh/.zshrc'
+ZSHRC_COUNT=$(grep -c "$ZSHRC_LINE" ~/.zshrc 2>/dev/null || echo 0)
+if [[ "$ZSHRC_COUNT" -eq 1 ]] && [[ $(grep -v '^\s*$' ~/.zshrc | wc -l) -eq 1 ]]; then
+    log "~/.zshrc already configured — skipping"
 else
-    echo 'source ~/zsh/.zshrc' >> ~/.zshrc
-    log "Wired ~/zsh/.zshrc into ~/.zshrc"
+    echo "$ZSHRC_LINE" > ~/.zshrc
+    log "Wrote ~/.zshrc"
 fi
 
 # ── default shell ─────────────────────────────────────────────────────────────
