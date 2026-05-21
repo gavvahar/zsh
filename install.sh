@@ -28,6 +28,15 @@ pkg_install() {
     esac
 }
 
+# ── prerequisites ─────────────────────────────────────────────────────────────
+log "Installing prerequisites..."
+case $(os) in
+    debian) sudo apt-get update -qq && sudo apt-get install -y unzip curl git fontconfig libatomic1 ;;
+    fedora) sudo dnf install -y unzip curl git fontconfig ;;
+    arch)   sudo pacman -S --noconfirm unzip curl git fontconfig ;;
+    macos)  command -v brew &>/dev/null || err "Homebrew is required on macOS. Install from https://brew.sh" ;;
+esac
+
 # ── zsh ───────────────────────────────────────────────────────────────────────
 if command -v zsh &>/dev/null; then
     log "zsh $(zsh --version | awk '{print $2}') already installed — skipping"
@@ -50,7 +59,7 @@ if command -v fzf &>/dev/null || [[ -x "$HOME/.fzf/bin/fzf" ]]; then
 else
     log "Installing fzf..."
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --all --no-bash --no-fish
+    ~/.fzf/install --bin
 fi
 
 # ── zoxide ────────────────────────────────────────────────────────────────────
@@ -112,10 +121,28 @@ else
     fi
 fi
 
-# ── conda ─────────────────────────────────────────────────────────────────────
-if command -v conda &>/dev/null; then
-    conda config --set auto_activate_base false
+# ── miniconda ─────────────────────────────────────────────────────────────────
+CONDA="$HOME/miniconda3/bin/conda"
+if command -v conda &>/dev/null || [[ -x "$CONDA" ]]; then
+    log "conda already installed — skipping"
+else
+    log "Installing Miniconda..."
+    if [[ "$OSTYPE" == darwin* ]]; then
+        curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+    else
+        curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    fi
+    bash /tmp/miniconda.sh -b -p "$HOME/miniconda3"
+    rm /tmp/miniconda.sh
+    log "Miniconda installed"
+fi
+"$CONDA" init zsh
+if "$CONDA" config --show auto_activate_base 2>/dev/null | grep -q "True"; then
+    "$CONDA" config --set auto_activate_base false
+    "$CONDA" config --set changeps1 false
     log "Disabled conda auto-activate base"
+else
+    log "conda auto-activate base already off"
 fi
 
 printf "\n${CYAN}  ╔══[ J.A.R.V.I.S. INSTALLATION COMPLETE ]══╗${RESET}\n"
